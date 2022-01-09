@@ -28,7 +28,7 @@ const App = () => {
       entryPoints: ['index.js'],
       bundle: true,
       write: false,
-      plugins: [unpkgPathPlugin()],
+      plugins: [unpkgPathPlugin(input)],
       define: {
         // we need to make sure that we are passing a string of production so we wrap
         // production in an extra set of quotes
@@ -55,5 +55,3 @@ ReactDOM.render(
   <App />,
   document.querySelector('#root')
 );
-
-// Section 8 lecture 71
