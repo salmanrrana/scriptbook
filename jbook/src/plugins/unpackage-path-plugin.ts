@@ -7,11 +7,26 @@ export const unpkgPathPlugin = () => {
     setup(build: esbuild.PluginBuild) {
       build.onResolve({ filter: /.*/ }, async (args: any) => {
         console.log('onResovle', args);
+
         if (args.path === 'index.js') {
           return { path: args.path, namespace: 'a' };
-        } else if (args.path === 'tiny-test-pkg') {
-          return { path: 'https://unpkg.com/tiny-test-pkg@1.0.0/index.js', namespace: 'a' };
         }
+
+        // this is for the instances when there are
+        // require/import statements in the index.js file
+        if (args.path.includes('./') || args.path.includes('../')) {
+          // by adding in the + '/', it adds a forward slash at the end of the url
+          // making it use the importer as the base of the url
+          return {
+            namespace: 'a',
+            path: new URL(args.path, args.importer + '/').href
+          };
+        }
+
+        return {
+          namespace: 'a',
+          path: `https://unpkg.com/${args.path}`
+        };
       });
 
       build.onLoad({ filter: /.*/ }, async (args: any) => {
@@ -21,7 +36,7 @@ export const unpkgPathPlugin = () => {
           return {
             loader: 'jsx',
             contents: `
-              const message = require('tiny-test-pkg');
+              const message = require('nested-test-pkg');
               console.log(message);
             `,
           };
