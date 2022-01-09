@@ -1,5 +1,6 @@
 import * as esbuild from 'esbuild-wasm';
 import axios from 'axios';
+import { url } from 'inspector';
 
 export const unpkgPathPlugin = () => {
   return {
@@ -19,7 +20,7 @@ export const unpkgPathPlugin = () => {
           // making it use the importer as the base of the url
           return {
             namespace: 'a',
-            path: new URL(args.path, args.importer + '/').href
+            path: new URL(args.path, 'https://unpkg.com' + args.resolveDir + '/').href
           };
         }
 
@@ -42,10 +43,13 @@ export const unpkgPathPlugin = () => {
           };
         }
 
-        const { data } = await axios.get(args.path);
+        const { data, request } = await axios.get(args.path);
         return {
           loader: 'jsx',
-          contents: data
+          contents: data,
+          // this is how we can find out if we have been redirected
+          // to a different url from our original request
+          resolveDir: new URL('./', request.responseURL).pathname
         };
       });
     },
