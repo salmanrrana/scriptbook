@@ -47,3 +47,5 @@ ReactDOM.render(
   <App />,
   document.querySelector('#root')
 );
+
+// Section 8 lecture 71
