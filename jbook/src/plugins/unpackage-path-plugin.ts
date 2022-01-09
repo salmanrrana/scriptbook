@@ -1,5 +1,11 @@
 import * as esbuild from 'esbuild-wasm';
 import axios from 'axios';
+import localForage from 'localforage';
+
+// object that can interact with instace of incatedDB in the browser
+const fileCache = localForage.createInstance({
+  name: 'filecache'
+});
 
 export const unpkgPathPlugin = () => {
   return {
@@ -36,20 +42,34 @@ export const unpkgPathPlugin = () => {
           return {
             loader: 'jsx',
             contents: `
-              import React from 'react';
+              import React from 'react-select';
               console.log(React);
             `,
           };
         }
 
+        // check to see if we have already fetched this file
+        // and if it is in the cache
+        const cachedResult = await fileCache.getItem<esbuild.OnLoadResult>(args.path);
+        // if it is, return it immedidately
+        if (cachedResult) {
+          return cachedResult;
+        }
+
         const { data, request } = await axios.get(args.path);
-        return {
+
+        const result: esbuild.OnLoadResult = {
           loader: 'jsx',
           contents: data,
           // this is how we can find out if we have been redirected
           // to a different url from our original request
           resolveDir: new URL('./', request.responseURL).pathname
         };
+
+        // store the response in the cache
+        await fileCache.setItem(args.path, result);
+        return result;
+
       });
     },
   };
