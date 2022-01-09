@@ -1,6 +1,5 @@
 import * as esbuild from 'esbuild-wasm';
 import axios from 'axios';
-import { url } from 'inspector';
 
 export const unpkgPathPlugin = () => {
   return {
@@ -37,8 +36,8 @@ export const unpkgPathPlugin = () => {
           return {
             loader: 'jsx',
             contents: `
-              const message = require('nested-test-pkg');
-              console.log(message);
+              import React from 'react';
+              console.log(React);
             `,
           };
         }

@@ -28,7 +28,15 @@ const App = () => {
       entryPoints: ['index.js'],
       bundle: true,
       write: false,
-      plugins: [unpkgPathPlugin()]
+      plugins: [unpkgPathPlugin()],
+      define: {
+        // we need to make sure that we are passing a string of production so we wrap
+        // production in an extra set of quotes
+        'process.env.NODE_ENV': '"production"',
+        // some packages will reference "global" so this will
+        // define global so we can run it locally and avoid errors
+        global: 'window'
+      }
     });
 
     setCode(result.outputFiles[0].text);
