@@ -26,6 +26,9 @@ const App = () => {
       return;
     }
 
+    iframe.current.srcdoc = html;
+
+    // this is the bundling process
     const result = await ref.current.build({
       entryPoints: ['index.js'],
       bundle: true,
