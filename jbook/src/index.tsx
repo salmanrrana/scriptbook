@@ -3,12 +3,12 @@ import { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { unpkgPathPlugin } from './plugins/unpackage-path-plugin';
 import { fetchPlugin } from './plugins/fetch-plugin';
+import CodeEditor from './components/code-editor';
 
 const App = () => {
   const ref = useRef<any>();
   const iframe = useRef<any>();
   const [input, setInput] = useState('');
-  const [code, setCode] = useState('');
 
   const startService = async () => {
     ref.current = await esbuild.startService({
@@ -26,6 +26,7 @@ const App = () => {
       return;
     }
 
+    // resetting the contents of the iframe
     iframe.current.srcdoc = html;
 
     // this is the bundling process
@@ -67,14 +68,15 @@ const App = () => {
     </html>
   `;
 
-  return <div>
-    <textarea value={input} onChange={e => setInput(e.target.value)}></textarea>
+  return (
     <div>
-      <button onClick={onClick}>Submit</button>
-    </div>
-    <pre>{code}</pre>
-    <iframe ref={iframe} title="test" srcDoc={html} sandbox="allow-scripts"></iframe>
-  </div>;
+      <CodeEditor />
+      <textarea value={input} onChange={e => setInput(e.target.value)}></textarea>
+      <div>
+        <button onClick={onClick}>Submit</button>
+      </div>
+      <iframe ref={iframe} title="preview" srcDoc={html} sandbox="allow-scripts"></iframe>
+    </div>);
 };
 
 ReactDOM.render(
