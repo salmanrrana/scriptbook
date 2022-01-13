@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 
 interface PreviewProps {
   code: string;
+  bundlingErrorStatus: string;
 }
 
 const html = `
@@ -36,7 +37,7 @@ const html = `
 </html>
 `;
 
-const Preview: React.FC<PreviewProps> = ({ code }) => {
+const Preview: React.FC<PreviewProps> = ({ code, bundlingErrorStatus }) => {
   const iframe = useRef<any>();
 
   useEffect(() => {
@@ -58,6 +59,16 @@ const Preview: React.FC<PreviewProps> = ({ code }) => {
         sandbox="allow-scripts"
         srcDoc={html}
       />
+      {bundlingErrorStatus && (
+        <div className="preview-error">
+          <div style={{ color: 'red', fontWeight: 'bold', marginBottom: '10px' }}>
+            Runtime Error
+          </div>
+          <div>
+            {bundlingErrorStatus}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
