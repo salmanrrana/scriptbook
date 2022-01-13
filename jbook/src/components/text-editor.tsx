@@ -1,3 +1,4 @@
+import './text-editor.css';
 import { useState, useEffect, useRef } from 'react';
 import MDEditor from '@uiw/react-md-editor';
 
@@ -7,11 +8,12 @@ const TextEditor: React.FC<any> = () => {
 
   useEffect(() => {
     const listener = (event: MouseEvent) => {
+      // make sure to prevent toggling when clicking in the edit mode
+      // "event.target as Node" is placed in order to prevent a typescript error
       if (ref.current && event.target && ref.current.contains(event.target as Node)) {
         return;
       }
 
-      console.log('element clicked is not inside the editor');
       setEditing(false);
     };
 
