@@ -33,7 +33,12 @@ const Preview: React.FC<PreviewProps> = ({ code }) => {
   useEffect(() => {
     // resetting the contents of the iframe
     iframe.current.srcdoc = html;
-    iframe.current.contentWindow.postMessage(code, '*');
+    // posting a message to the iframe
+    // will delay to make sure that the message comes through correctly
+    // gives the browser sometime to update the source dox
+    setTimeout(() => {
+      iframe.current.contentWindow.postMessage(code, '*');
+    }, 50);
   }, [code]);
 
   return (
