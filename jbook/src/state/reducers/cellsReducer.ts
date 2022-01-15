@@ -30,7 +30,11 @@ const reducer = produce((
       state.data[id].content = content;
       return;
     case ActionType.DELETE_CELL:
-      return state;
+      // deletes it from the "data" object
+      delete state.data[action.payload];
+      //deletes it from the "order" array by the "id" using filter
+      state.order = state.order.filter(id => id !== action.payload);
+      return;
     case ActionType.INSERT_CELL_BEFORE:
       return state;
     case ActionType.MOVE_CELL:
