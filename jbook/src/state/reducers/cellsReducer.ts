@@ -49,7 +49,7 @@ const reducer = produce((
       state.order[targetIndex] = action.payload.id;
 
       return state;
-    case ActionType.INSERT_CELL_BEFORE:
+    case ActionType.INSERT_CELL_AFTER:
       // creating a cell to add into our state
       const cell: Cell = {
         id: randomId(),
@@ -61,12 +61,12 @@ const reducer = produce((
 
       // now taking id of the cell and inserting into the "order" array
       const foundIndex = state.order.findIndex(id => id === action.payload.id);
-      //if null, add to the end of the order
+      //if null, add to the beginning of the order
       if (foundIndex < 0) {
-        state.order.push(cell.id);
+        state.order.unshift(cell.id);
       } else {
         // if value, then insert it at spot
-        state.order.splice(foundIndex, 0, cell.id);
+        state.order.splice(foundIndex + 1, 0, cell.id);
       }
 
       return state;
