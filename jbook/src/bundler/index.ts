@@ -26,7 +26,9 @@ const bundle = async (rawCode: string) => {
         // some packages will reference "global" so this will
         // define global so we can run it locally and avoid errors
         global: 'window'
-      }
+      },
+      jsxFactory: '_React.createElement',
+      jsxFragment: '_React.Fragment',
     });
 
     return {
