@@ -9,10 +9,11 @@ const CellList: React.FC = () => {
   const cells = useTypedSelector(({ cells: { order, data } }) =>
     order.map(id => data[id])
   );
-  const { fetchCells } = useActions();
+  const { fetchCells, saveCells } = useActions();
 
   useEffect(() => {
     fetchCells();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const renderedCells = cells.map(cell => (
